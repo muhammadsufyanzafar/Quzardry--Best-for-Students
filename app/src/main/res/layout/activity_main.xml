@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@color/background"
+    tools:context=".MainActivity">
+
+    <!-- Flashcard Container with Flip Animation -->
+    <FrameLayout
+        android:id="@+id/flashcard_container"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/card_background"
+        android:elevation="4dp">
+
+        <!-- Front of Card (Question) -->
+        <LinearLayout
+            android:id="@+id/card_front"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <TextView
+                android:id="@+id/tvQuestion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Question will appear here"
+                android:textSize="20sp"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tap to flip"
+                android:textSize="14sp"
+                android:layout_marginTop="16dp"
+                android:textColor="#666"/>
+        </LinearLayout>
+
+        <!-- Back of Card (Answer) -->
+        <LinearLayout
+            android:id="@+id/card_back"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tvAnswer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Answer will appear here"
+                android:textSize="20sp"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tap to flip back"
+                android:textSize="14sp"
+                android:layout_marginTop="16dp"
+                android:textColor="#666"/>
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- Show Answer Button -->
+    <Button
+        android:id="@+id/btnShowAnswer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Show Answer"
+        android:layout_below="@id/flashcard_container"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Navigation Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnShowAnswer"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnPrevious"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Previous"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/btnNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Next"/>
+    </LinearLayout>
+
+    <!-- Add New Card Button -->
+    <Button
+        android:id="@+id/btnAddCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add New Flashcard"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>
