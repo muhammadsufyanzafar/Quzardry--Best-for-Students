@@ -8,7 +8,6 @@ Whether you’re preparing for exams, learning a new language, or memorizing key
 ## 🚀 Features
 - 📝 Create and manage custom flashcards
 - 🔄 Shuffle & review cards anytime
-- 🎯 Quiz mode for self-testing
 - 🎨 Clean & responsive UI design
 - 📱 Built with **Android Studio** using **Java**
 - ☁️ Firebase integration for data storage
@@ -17,9 +16,9 @@ Whether you’re preparing for exams, learning a new language, or memorizing key
 ---
 
 ## 📸 Screenshots
-| Home | Add Flashcard | Quiz Mode |
+| Home | Add Flashcards | Edit Flashcards |
 |------|---------------|-----------|
-| ![S 1]() | ![S 2]() | ![S 3]() |
+| ![S 1](https://i.postimg.cc/pXJgRMgK/Quzardry-1.jpg) | ![S 2](https://i.postimg.cc/NjGZ0PcS/Quzardry-2.jpg) | ![S 3](https://i.postimg.cc/Vk7p0Bs6/Quzardry-3.jpg) |
 
 ---
 
