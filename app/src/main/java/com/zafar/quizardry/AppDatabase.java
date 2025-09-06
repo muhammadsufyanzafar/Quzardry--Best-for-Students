@@ -12,9 +12,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Flashcard.class}, version = 1)
+@Database(entities = {Flashcard.class, QuizQuestion.class}, version = 2)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract FlashcardDao flashcardDao();
+    public abstract QuizDao quizDao();
 
     private static AppDatabase INSTANCE;
 
@@ -22,49 +23,63 @@ public abstract class AppDatabase extends RoomDatabase {
         if (INSTANCE == null) {
             INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, "flashcard-db")
-                    .addCallback(new RoomDatabase.Callback() {
+                    .addCallback(new Callback() {
                         @Override
                         public void onCreate(@NonNull SupportSQLiteDatabase db) {
                             super.onCreate(db);
                             Executors.newSingleThreadExecutor().execute(() -> {
-                                prepopulateDatabase(INSTANCE.flashcardDao());
+                                prepopulateFlashcards(INSTANCE.flashcardDao());
+                                prepopulateQuiz(INSTANCE.quizDao());
                             });
                         }
                     })
-                    .allowMainThreadQueries()
+                    .fallbackToDestructiveMigration() // for dev; replace with Migration later
                     .build();
         }
         return INSTANCE;
     }
 
-    private static void prepopulateDatabase(FlashcardDao dao) {
-        try {
-            List<Flashcard> existing = dao.getAllFlashcards();
-            Log.d("DB_DEBUG", "Current card count: " + existing.size());
+    private static void prepopulateFlashcards(FlashcardDao dao) {
+        if (dao.getAllFlashcards().isEmpty()) {
+            dao.insertAll(Arrays.asList(
+                    new Flashcard("What is the capital of France?", "Paris"),
+                    new Flashcard("Which is the longest river in the world?", "The Nile River"),
+                    new Flashcard("Who painted the Mona Lisa?", "Leonardo da Vinci"),
+                    new Flashcard("First person on the moon?", "Neil Armstrong"),
+                    new Flashcard("Largest ocean?", "Pacific Ocean"),
+                    new Flashcard("Hardest natural substance?", "Diamond"),
+                    new Flashcard("Plant process using sunlight?", "Photosynthesis"),
+                    new Flashcard("First artificial satellite?", "Sputnik 1"),
+                    new Flashcard("Author of Harry Potter?", "J.K. Rowling"),
+                    new Flashcard("Who built the Taj Mahal?", "Shah Jahan")
+            ));
+        }
+    }
 
-            if (existing.isEmpty()) {
-                List<Flashcard> defaultFlashcards = Arrays.asList(
-                        new Flashcard("What is the capital of France?", "Paris"),
-                        new Flashcard("Which is the longest river in the world??", "The Nile River"),
-                        new Flashcard("Who painted the Mona Lisa?", "Leonardo da Vinci"),
-                        new Flashcard("Who was the first person to walk on the moon?", "Neil Armstrong")
-//                        new Flashcard("What is the largest ocean on Earth?", "Pacific Ocean"),
-//                        new Flashcard("What is the hardest natural substance on Earth?", "Diamond"),
-//                        new Flashcard("What process do plants use to convert sunlight into energy?", "Photosynthesis"),
-//                        new Flashcard("What is the name of the first artificial satellite?", "Sputnik 1"),
-//                        new Flashcard("Who is the author of the Harry Potter series?", "J.K. Rowling"),
-//                        new Flashcard("Who built the Taj Mahal?", "Shah Jahan")
-                );
-
-                dao.insertAll(defaultFlashcards);
-                Log.d("DB_DEBUG", "Inserted " + defaultFlashcards.size() + " cards");
-
-                // Verify insertion
-                List<Flashcard> afterInsert = dao.getAllFlashcards();
-                Log.d("DB_DEBUG", "New card count: " + afterInsert.size());
-            }
-        } catch (Exception e) {
-            Log.e("DB_DEBUG", "Prepopulation failed", e);
+    private static void prepopulateQuiz(QuizDao dao) {
+        if (dao.getAll().isEmpty()) {
+            dao.insertAll(Arrays.asList(
+                    new QuizQuestion("Capital of Germany?",
+                            "Berlin","Munich","Hamburg","Frankfurt", 0),
+                    new QuizQuestion("Largest planet?",
+                            "Earth","Jupiter","Saturn","Neptune", 1),
+                    new QuizQuestion("2 + 2 = ?",
+                            "3","4","5","22", 1),
+                    new QuizQuestion("Mona Lisa painter?",
+                            "Michelangelo","Raphael","Leonardo da Vinci","Donatello", 2),
+                    new QuizQuestion("Blue whale is a ...",
+                            "Fish","Reptile","Bird","Mammal", 3),
+                    new QuizQuestion("Speed of light approx?",
+                            "3,000 km/s","30,000 km/s","300,000 km/s","3,000,000 km/s", 2),
+                    new QuizQuestion("H2O is",
+                            "Hydrogen","Oxygen","Water","Helium", 2),
+                    new QuizQuestion("Photosynthesis uses",
+                            "Sunlight","Moonlight","Starlight","No light", 0),
+                    new QuizQuestion("Taj Mahal city?",
+                            "Agra","Delhi","Jaipur","Mumbai", 0),
+                    new QuizQuestion("Largest desert?",
+                            "Sahara","Gobi","Arctic","Atacama", 0)
+            ));
         }
     }
 }

@@ -119,26 +119,36 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void toggleCard() {
-        try {
-            if (cardFront == null || cardBack == null) {
-                Log.e(TAG, "Card views not initialized");
-                return;
-            }
+    private void flipCard(boolean showBack) {
+        int duration = getResources().getInteger(R.integer.card_flip_time_full);
+        float scale = getResources().getDisplayMetrics().density;
+        cardFront.setCameraDistance(8000 * scale);
+        cardBack.setCameraDistance(8000 * scale);
 
-            if (cardFront.getVisibility() == View.VISIBLE) {
-                cardFront.setVisibility(View.GONE);
-                cardBack.setVisibility(View.VISIBLE);
-                if (btnShowAnswer != null) btnShowAnswer.setText("Show Question");
-            } else {
-                cardBack.setVisibility(View.GONE);
-                cardFront.setVisibility(View.VISIBLE);
-                if (btnShowAnswer != null) btnShowAnswer.setText("Show Answer");
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Error toggling card", e);
+        View visible = showBack ? cardBack : cardFront;
+        View invisible = showBack ? cardFront : cardBack;
+
+        invisible.setVisibility(View.VISIBLE);
+        invisible.setRotationY(-180f);
+
+        invisible.animate().rotationY(0f).setDuration(duration);
+        visible.animate().rotationY(180f).setDuration(duration)
+                .withEndAction(() -> {
+                    visible.setVisibility(View.GONE);
+                    visible.setRotationY(0f);
+                });
+    }
+
+    private void toggleCard() {
+        if (cardFront.getVisibility() == View.VISIBLE) {
+            if (btnShowAnswer != null) btnShowAnswer.setText("Show Question");
+            flipCard(true);
+        } else {
+            if (btnShowAnswer != null) btnShowAnswer.setText("Show Answer");
+            flipCard(false);
         }
     }
+
 
     private void loadFlashcards() {
         new Thread(() -> {
@@ -198,15 +208,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showNextCard() {
-        try {
-            if (flashcards != null && currentPosition < flashcards.size() - 1) {
-                currentPosition++;
-                displayCurrentCard();
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Error showing next card", e);
+        if (flashcards != null && currentPosition < flashcards.size() - 1) {
+            currentPosition++;
+            displayCurrentCard();
+        } else if (flashcards != null && !flashcards.isEmpty()) {
+            Toast.makeText(this, "Nice! You reached the last card 🎉", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     private void showPreviousCard() {
         try {

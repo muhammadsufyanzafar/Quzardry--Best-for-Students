@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Quizardry</string>
+
+    <!-- AdMob: replace with your real IDs -->
+    <string name="admob_app_id">ca-app-pub-4884978624677986~3692512313</string>
+    <string name="admob_banner_home">ca-app-pub-4884978624677986/4046137045</string>
+    <string name="admob_banner_settings">ca-app-pub-4884978624677986/4046137045</string>
+    <string name="admob_interstitial_quiz_end">ca-app-pub-4884978624677986/1419973707</string>
 </resources>

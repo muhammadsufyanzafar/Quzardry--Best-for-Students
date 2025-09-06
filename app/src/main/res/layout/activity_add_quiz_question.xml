@@ -1,0 +1,78 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/etQ"
+            android:hint="Question"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/etA"
+            android:hint="Option A"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/etB"
+            android:hint="Option B"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/etC"
+            android:hint="Option C"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/etD"
+            android:hint="Option D"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <RadioGroup
+            android:id="@+id/rgCorrect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="12dp">
+
+            <RadioButton
+                android:id="@+id/rbCA"
+                android:text="A"
+                android:layout_height="25dp"
+                android:layout_width="140dp"/>
+
+            <RadioButton
+                android:id="@+id/rbCB"
+                android:text="B"
+                android:layout_height="25dp"
+                android:layout_width="140dp"/>
+
+            <RadioButton
+                android:id="@+id/rbCC"
+                android:text="C"
+                android:layout_height="25dp"
+                android:layout_width="140dp"/>
+
+            <RadioButton
+                android:id="@+id/rbCD"
+                android:text="D"
+                android:layout_height="25dp"
+                android:layout_width="140dp"/>
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btnSaveQ"
+            android:text="Save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</ScrollView>
