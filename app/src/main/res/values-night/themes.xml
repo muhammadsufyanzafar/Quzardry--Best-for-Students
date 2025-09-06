@@ -9,6 +9,9 @@
         <item name="colorOnSecondary">@color/black</item>
 
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
+        <item name="background">@color/black</item>
+
     </style>
 
     <style name="Theme.Quizardry.Splash" parent="Theme.MaterialComponents.DayNight.NoActionBar">

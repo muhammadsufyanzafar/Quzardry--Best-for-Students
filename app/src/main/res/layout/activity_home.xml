@@ -5,32 +5,15 @@
     android:background="@color/background"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        android:textStyle="bold"
-        android:textSize="24sp"
-        android:textColor="@color/purple_700"/>
-
-    <ImageButton
-        android:id="@+id/btnSettings"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentEnd="true"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@android:drawable/ic_menu_preferences"
-        android:contentDescription="Settings"/>
-
+    <!-- Menu container -->
     <LinearLayout
         android:id="@+id/choiceContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvTitle"
         android:layout_marginTop="24dp"
         android:orientation="vertical">
 
+        <!-- Flashcards -->
         <LinearLayout
             android:id="@+id/btnFlashcards"
             android:layout_width="match_parent"
@@ -49,13 +32,15 @@
                 android:textColor="@android:color/black"/>
         </LinearLayout>
 
+        <!-- Quiz (lowered) -->
         <LinearLayout
             android:id="@+id/btnQuiz"
             android:layout_width="match_parent"
             android:layout_height="140dp"
             android:background="@drawable/card_background"
             android:padding="20dp"
-            android:gravity="center">
+            android:gravity="center"
+            android:layout_marginTop="40dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -67,6 +52,7 @@
         </LinearLayout>
     </LinearLayout>
 
+    <!-- Banner Ad -->
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"
         android:layout_width="match_parent"
