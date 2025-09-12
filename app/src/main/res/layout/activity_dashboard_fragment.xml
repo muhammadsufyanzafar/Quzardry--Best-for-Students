@@ -1,0 +1,137 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:padding="16dp" android:background="@color/background">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent" android:layout_height="wrap_content">
+
+        <!-- Greeting + streak -->
+        <LinearLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:padding="12dp"
+            android:background="@drawable/card_background">
+            <TextView
+                android:text="Welcome back!"
+                android:textStyle="bold" android:textSize="18sp"
+                android:textColor="@android:color/black"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/tvStreak"
+                android:text="1 Day Streak"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="4dp"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <TextView
+                android:text="Keep the momentum going — 2 more days to your next milestone!"
+                android:textColor="#666"
+                android:layout_marginTop="4dp"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <!-- Stats -->
+        <LinearLayout
+            android:layout_marginTop="16dp"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:weightSum="2">
+            <LinearLayout
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:orientation="vertical"
+                android:padding="12dp" android:background="@drawable/card_background"
+                android:layout_marginEnd="8dp">
+                <TextView android:text="Time Today" android:textColor="#666"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                <TextView android:id="@+id/tvTimeToday" android:text="0h 0m"
+                    android:textStyle="bold" android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:orientation="vertical"
+                android:padding="12dp" android:background="@drawable/card_background"
+                android:layout_marginStart="8dp">
+                <TextView android:text="Progress" android:textColor="#666"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                <TextView android:id="@+id/tvProgress" android:text="0%"
+                    android:textStyle="bold" android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:weightSum="2">
+            <LinearLayout
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:orientation="vertical"
+                android:padding="12dp" android:background="@drawable/card_background"
+                android:layout_marginEnd="8dp">
+                <TextView android:text="Flashcards" android:textColor="#666"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                <TextView android:id="@+id/tvFlashcards" android:text="0"
+                    android:textStyle="bold" android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:orientation="vertical"
+                android:padding="12dp" android:background="@drawable/card_background"
+                android:layout_marginStart="8dp">
+                <TextView android:text="Quizzes" android:textColor="#666"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                <TextView android:id="@+id/tvQuizzes" android:text="0"
+                    android:textStyle="bold" android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Daily Inspiration -->
+        <LinearLayout
+            android:layout_marginTop="16dp"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:padding="12dp"
+            android:background="@drawable/card_background">
+            <TextView
+                android:text="Daily Inspiration"
+                android:textStyle="bold" android:textColor="@android:color/black"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/tvQuote"
+                android:layout_marginTop="8dp"
+                android:textColor="#333"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <!-- Quick links -->
+        <LinearLayout
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_width="match_parent" android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/btnGoCards"
+                android:text="Open Cards"
+                android:textStyle="bold" android:textColor="@android:color/black"
+                android:padding="12dp"
+                android:background="@drawable/card_background"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"/>
+            <TextView
+                android:id="@+id/btnGoQuizzes"
+                android:text="Open Quizzes"
+                android:textStyle="bold" android:textColor="@android:color/black"
+                android:padding="12dp"
+                android:background="@drawable/card_background"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

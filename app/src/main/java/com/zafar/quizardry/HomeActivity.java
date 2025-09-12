@@ -1,63 +1,95 @@
 package com.zafar.quizardry;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.LinearLayout;
+import com.zafar.quizardry.R;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private LinearLayout btnFlashcards, btnQuiz;
-    private AdView adView;
+    private BottomNavigationView bottomNav;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_home_host);
 
-        // Set title in the ActionBar
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(getString(R.string.app_name));
+        bottomNav = findViewById(R.id.bottomNavigation);
+
+        //  Merged working navigation code
+        bottomNav.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId(); // Get the ID of the selected item
+
+            if (itemId == R.id.nav_home) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainer, new DashboardFragment())
+                        .commit();
+                return true;
+            } else if (itemId == R.id.nav_cards) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainer, new CardsFragment())
+                        .commit();
+                return true;
+            } else if (itemId == R.id.nav_quizzes) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainer, new QuizzesFragment())
+                        .commit();
+                return true;
+            } else if (itemId == R.id.nav_profile) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainer, new ProfileFragment())
+                        .commit();
+                return true;
+            }
+            return false; // Return false for unhandled item IDs
+        });
+
+
+        // Load default fragment on first launch
+        if (savedInstanceState == null) {
+            bottomNav.setSelectedItemId(R.id.nav_home);
         }
 
-        // Find views
-        btnFlashcards = findViewById(R.id.btnFlashcards);
-        btnQuiz = findViewById(R.id.btnQuiz);
-        adView = findViewById(R.id.adView);
-
-        // Load AdMob banner
-        AdRequest adRequest = new AdRequest.Builder().build();
-        adView.loadAd(adRequest);
-
-        // Click listeners
-        btnFlashcards.setOnClickListener(v ->
-                startActivity(new Intent(HomeActivity.this, MainActivity.class)));
-
-        btnQuiz.setOnClickListener(v ->
-                startActivity(new Intent(HomeActivity.this, QuizActivity.class)));
+        // Floating create button
+        View fab = findViewById(R.id.fabCreate);
+        if (fab != null) fab.setOnClickListener(v -> showCreateSheet());
     }
 
-    // Inflate the menu with the Settings button
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_home, menu); // Use menu_home.xml for Home screen
-        return true;
-    }
+    private void showCreateSheet() {
+        BottomSheetDialog sheet = new BottomSheetDialog(this);
+        View view = LayoutInflater.from(this).inflate(R.layout.sheet_create_new, null);
+        sheet.setContentView(view);
 
-    // Handle menu item clicks
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_settings) {
-            startActivity(new Intent(this, SettingsActivity.class));
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        LinearLayout btnAI = view.findViewById(R.id.btnGenerateAI);
+        LinearLayout btnImportCards = view.findViewById(R.id.btnImportCards);
+        LinearLayout btnImportQuiz = view.findViewById(R.id.btnImportQuiz);
+        LinearLayout btnQuizFromCards = view.findViewById(R.id.btnQuizFromCards);
+
+        btnAI.setOnClickListener(v -> {
+            sheet.dismiss();
+            // TODO: Navigate to AI generation flow
+        });
+        btnImportCards.setOnClickListener(v -> {
+            sheet.dismiss();
+            // TODO: Implement flashcard import
+        });
+        btnImportQuiz.setOnClickListener(v -> {
+            sheet.dismiss();
+            // TODO: Implement quiz import
+        });
+        btnQuizFromCards.setOnClickListener(v -> {
+            sheet.dismiss();
+            // TODO: Generate quiz from cards
+        });
+
+        sheet.show();
     }
 }

@@ -15,8 +15,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Quizardry"
         tools:targetApi="31">
-
-        <!-- Google Mobile Ads App ID -->
+        <activity
+            android:name=".ProfileFragment"
+            android:exported="false" />
+        <activity
+            android:name=".QuizzesFragment"
+            android:exported="false" />
+        <activity
+            android:name=".CardsFragment"
+            android:exported="false" />
+        <activity
+            android:name=".DashboardFragment"
+            android:exported="false" /> <!-- Google Mobile Ads App ID -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/admob_app_id" />
@@ -24,36 +34,31 @@
         <activity
             android:name=".AddQuizQuestionActivity"
             android:exported="false" />
-
-        <activity android:name=".QuizActivity"
+        <activity
+            android:name=".QuizActivity"
             android:exported="false" />
-
-        <activity android:name=".SettingsActivity"
+        <activity
+            android:name=".SettingsActivity"
             android:exported="false" />
-
-        <activity android:name=".HomeActivity"
+        <activity
+            android:name=".HomeActivity"
             android:exported="false" />
-
         <activity
             android:name=".SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.Quizardry.Splash">
-
             <intent-filter>
-                <action
-                    android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN" />
 
-                <category
-                    android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".MainActivity"
             android:exported="false" />
-
         <activity
             android:name=".AddFlashcardActivity"
             android:exported="false" />
     </application>
+
 </manifest>
