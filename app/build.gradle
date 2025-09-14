@@ -5,7 +5,9 @@ plugins {
 android {
     namespace 'com.zafar.quizardry'
     compileSdk 35
-
+    buildFeatures {
+        buildConfig true
+    }
     defaultConfig {
         applicationId "com.zafar.quizardry"
         minSdk 24
@@ -14,6 +16,9 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // Read OpenRouter key from local.properties: OPENROUTER_API_KEY=sk-or-...
+        buildConfigField "String","OPENROUTER_API_KEY","\"${project.findProperty('OPENROUTER_API_KEY') ?: ""}\""
     }
 
     buildTypes {
@@ -46,4 +51,6 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'com.google.android.gms:play-services-ads:23.3.0'
 
+    // NEW: OpenRouter HTTP client
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
 }

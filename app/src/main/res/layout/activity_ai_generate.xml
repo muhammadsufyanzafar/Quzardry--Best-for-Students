@@ -1,0 +1,59 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <LinearLayout
+        android:orientation="vertical" android:padding="16dp"
+        android:layout_width="match_parent" android:layout_height="wrap_content">
+
+        <TextView
+            android:text="AI Content Generator"
+            android:textStyle="bold" android:textSize="20sp"
+            android:textColor="@android:color/black"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:background="@drawable/card_background"
+            android:padding="12dp" android:layout_marginBottom="12dp">
+
+            <TextView
+                android:text="Topic" android:textColor="#666"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <EditText
+                android:id="@+id/etTopic"
+                android:hint="e.g., World War 1"
+                android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="Content type" android:textColor="#666"
+                android:layout_marginTop="12dp"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <Spinner
+                android:id="@+id/spContentType"
+                android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="Number of items" android:textColor="#666"
+                android:layout_marginTop="12dp"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <EditText
+                android:id="@+id/etCount"
+                android:inputType="number"
+                android:hint="10"
+                android:layout_width="match_parent" android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnGenerate"
+            android:text="Generate Content"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:text="Cancel"
+            android:layout_width="match_parent" android:layout_height="wrap_content" />
+    </LinearLayout>
+</ScrollView>

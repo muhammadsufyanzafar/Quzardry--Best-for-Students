@@ -15,6 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Quizardry"
         tools:targetApi="31">
+
+        <!-- Existing activities ... -->
         <activity
             android:name=".ProfileFragment"
             android:exported="false" />
@@ -26,10 +28,15 @@
             android:exported="false" />
         <activity
             android:name=".DashboardFragment"
-            android:exported="false" /> <!-- Google Mobile Ads App ID -->
+            android:exported="false" />
+
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/admob_app_id" />
+
+        <meta-data
+            android:name="OPENROUTER_API_KEY"
+            android:value="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" />
 
         <activity
             android:name=".AddQuizQuestionActivity"
@@ -49,7 +56,6 @@
             android:theme="@style/Theme.Quizardry.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -59,6 +65,10 @@
         <activity
             android:name=".AddFlashcardActivity"
             android:exported="false" />
-    </application>
 
+        <!-- NEW: AI generation screen -->
+        <activity
+            android:name=".AIGenerateActivity"
+            android:exported="false" />
+    </application>
 </manifest>

@@ -1,5 +1,6 @@
 package com.zafar.quizardry;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,8 +76,9 @@ public class HomeActivity extends AppCompatActivity {
 
         btnAI.setOnClickListener(v -> {
             sheet.dismiss();
-            // TODO: Navigate to AI generation flow
+            startActivity(new Intent(this, AIGenerateActivity.class));
         });
+
         btnImportCards.setOnClickListener(v -> {
             sheet.dismiss();
             // TODO: Implement flashcard import
