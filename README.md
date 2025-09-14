@@ -19,8 +19,6 @@ Built with a clean UI and future-ready design, Quzardry is continuously improvin
 |------|------------|------|
 | ![S 1](https://i.postimg.cc/pXJgRMgK/Quzardry-1.jpg) | ![S 2](https://i.postimg.cc/NjGZ0PcS/Quzardry-2.jpg) | ![S 3](https://i.postimg.cc/Vk7p0Bs6/Quzardry-3.jpg) |
 
-*(Replace with your actual app screenshots)*
-
 ---
 
 ## ✨ Upcoming Features
