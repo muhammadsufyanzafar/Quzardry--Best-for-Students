@@ -22,7 +22,7 @@
 
         <meta-data
             android:name="OPENROUTER_API_KEY"
-            android:value="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" />
+            android:value="YOUR_API_KEY_HERE" />
 
         <activity
             android:name=".AddQuizQuestionActivity"
