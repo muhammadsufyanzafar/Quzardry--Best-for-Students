@@ -1,79 +1,125 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:padding="16dp" android:background="@color/background">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@color/background">
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="match_parent" android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <!-- Profile header -->
         <LinearLayout
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="vertical" android:padding="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp"
             android:background="@drawable/card_background">
+
             <TextView
                 android:text="Student"
-                android:textStyle="bold" android:textColor="@android:color/black"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
                 android:textSize="18sp"
-                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
             <TextView
                 android:text="Learning enthusiast"
-                android:textColor="#666" android:layout_marginTop="4dp"
-                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                android:textColor="#666"
+                android:layout_marginTop="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <!-- Achievements grid (static placeholders) -->
         <LinearLayout
             android:layout_marginTop="16dp"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="vertical" android:padding="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp"
             android:background="@drawable/card_background">
+
             <TextView
                 android:text="Achievements"
-                android:textStyle="bold" android:textColor="@android:color/black"
-                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
             <TextView
                 android:text="Locked: First Study, 3 Day Streak, Fast Learner, Quiz Master…"
-                android:textColor="#666" android:layout_marginTop="8dp"
-                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                android:textColor="#666"
+                android:layout_marginTop="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <!-- Statistics -->
         <LinearLayout
             android:layout_marginTop="16dp"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="vertical" android:padding="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp"
             android:background="@drawable/card_background">
             <TextView
                 android:text="Statistics"
-                android:textStyle="bold" android:textColor="@android:color/black"
-                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
-            <TextView android:id="@+id/tvTotalStudy" android:text="Total Study Time: 0h 0m"
-                android:layout_marginTop="8dp" android:textColor="#333"
-                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-            <TextView android:id="@+id/tvSets" android:text="Flashcard Sets: 1"
+            <TextView android:id="@+id/tvTotalStudy"
+                android:text="Total Study Time: 0h 0m"
+                android:layout_marginTop="8dp"
                 android:textColor="#333"
-                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-            <TextView android:id="@+id/tvTotalCards" android:text="Total Cards: 0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView android:id="@+id/tvSets"
+                android:text="Flashcard Sets: 1"
                 android:textColor="#333"
-                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-            <TextView android:id="@+id/tvCardsMastered" android:text="Cards Mastered: 0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView android:id="@+id/tvTotalCards"
+                android:text="Total Cards: 0"
                 android:textColor="#333"
-                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-            <TextView android:id="@+id/tvQuizzesCompleted" android:text="Quizzes Completed: 0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView android:id="@+id/tvCardsMastered"
+                android:text="Cards Mastered: 0"
                 android:textColor="#333"
-                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-            <TextView android:id="@+id/tvAvgScore" android:text="Average Score: 0%"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView android:id="@+id/tvQuizzesCompleted"
+                android:text="Quizzes Completed: 0"
                 android:textColor="#333"
-                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-            <TextView android:id="@+id/tvCurrentStreak" android:text="Current Streak: 0 day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView android:id="@+id/tvAvgScore"
+                android:text="Average Score: 0%"
                 android:textColor="#333"
-                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-            <TextView android:id="@+id/tvBadges" android:text="Badges Earned: 0/16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView android:id="@+id/tvCurrentStreak"
+                android:text="Current Streak: 0 day"
                 android:textColor="#333"
-                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView android:id="@+id/tvBadges"
+                android:text="Badges Earned: 0/16"
+                android:textColor="#333"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
     </LinearLayout>

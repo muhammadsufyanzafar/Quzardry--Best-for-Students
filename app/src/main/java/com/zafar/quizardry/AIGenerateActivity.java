@@ -1,16 +1,32 @@
 package com.zafar.quizardry;
 
-import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
-import android.widget.*;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.gson.*;
-import okhttp3.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,6 +45,14 @@ public class AIGenerateActivity extends AppCompatActivity {
     private static final String OPENROUTER_ENDPOINT = "https://openrouter.ai/api/v1/chat/completions";
     private static final String MODEL = "google/gemini-2.0-flash-exp:free";
 
+    // Rate-limiting and retry handling
+    private static final int COOLDOWN_MS = 60000;        // 60s cooldown after a 429
+    private static final int MAX_BACKOFF_ATTEMPTS = 2;    // retry 2 times on 429
+    private static final int INITIAL_BACKOFF_MS = 15000;  // 15s then 30s
+    private int backoffAttempt = 0;
+
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,11 +62,11 @@ public class AIGenerateActivity extends AppCompatActivity {
 
         db = AppDatabase.getInstance(this);
 
-        etTopic        = findViewById(R.id.etTopic);
-        etCount        = findViewById(R.id.etCount);
-        spContentType  = findViewById(R.id.spContentType);
-        btnGenerate    = findViewById(R.id.btnGenerate);
-        btnCancel      = findViewById(R.id.btnCancel);
+        etTopic       = findViewById(R.id.etTopic);
+        etCount       = findViewById(R.id.etCount);
+        spContentType = findViewById(R.id.spContentType);
+        btnGenerate   = findViewById(R.id.btnGenerate);
+        btnCancel     = findViewById(R.id.btnCancel);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
@@ -51,14 +75,17 @@ public class AIGenerateActivity extends AppCompatActivity {
         );
         spContentType.setAdapter(adapter);
 
-        btnGenerate.setOnClickListener(v -> onGenerate());
-        btnCancel  .setOnClickListener(v -> finish());
+        btnGenerate.setOnClickListener(v -> {
+            backoffAttempt = 0; // reset for a fresh series
+            onGenerate();
+        });
+        btnCancel.setOnClickListener(v -> finish());
     }
 
     private void onGenerate() {
-        String topic   = etTopic.getText().toString().trim();
-        String type    = spContentType.getSelectedItem().toString();
-        String countStr= etCount.getText().toString().trim();
+        String topic    = etTopic.getText().toString().trim();
+        String type     = spContentType.getSelectedItem().toString();
+        String countStr = etCount.getText().toString().trim();
 
         if (topic.isEmpty()) {
             toast("Please enter a topic");
@@ -66,29 +93,28 @@ public class AIGenerateActivity extends AppCompatActivity {
         }
 
         int count = 10;
-        try {
-            count = Integer.parseInt(countStr);
-        } catch (Exception ignored) {}
+        try { count = Integer.parseInt(countStr); } catch (Exception ignored) {}
 
-        String prompt = buildPrompt(topic, type, count);
         String apiKey = resolveApiKey();
         if (apiKey.isEmpty()) {
-            toast("Missing API key! See secrets.xml or manifest meta-data");
+            toast("Missing API key! Add it in secrets.xml or manifest meta-data");
             return;
         }
 
-        btnGenerate.setEnabled(false);
-        btnGenerate.setText("Generating...");
+        String prompt = buildPrompt(topic, type, count);
+        disableButton("Generating...");
+        sendRequest(apiKey, prompt, type);
+    }
 
+    private void sendRequest(String apiKey, String prompt, String type) {
         JsonObject req = new JsonObject();
         req.addProperty("model", MODEL);
 
         JsonArray messages = new JsonArray();
+
         JsonObject sys = new JsonObject();
         sys.addProperty("role", "system");
-        sys.addProperty("content",
-                "You will respond with STRICT JSON only inside triple backticks. " +
-                        "No commentary.");
+        sys.addProperty("content", "You will respond with STRICT JSON only inside triple backticks. No commentary.");
         messages.add(sys);
 
         JsonObject user = new JsonObject();
@@ -99,10 +125,7 @@ public class AIGenerateActivity extends AppCompatActivity {
         req.add("messages", messages);
         req.addProperty("temperature", 0.7);
 
-        RequestBody body = RequestBody.create(
-                req.toString(),
-                MediaType.parse("application/json")
-        );
+        RequestBody body = RequestBody.create(req.toString(), MediaType.parse("application/json"));
 
         Request request = new Request.Builder()
                 .url(OPENROUTER_ENDPOINT)
@@ -112,29 +135,58 @@ public class AIGenerateActivity extends AppCompatActivity {
 
         client.newCall(request).enqueue(new Callback() {
             @Override public void onFailure(Call call, IOException e) {
-                runOnUiThread(() -> {
-                    resetButton();
+                mainHandler.post(() -> {
+                    enableButton();
                     toast("Network error: " + e.getMessage());
                 });
             }
 
             @Override public void onResponse(Call call, Response response) throws IOException {
                 String raw = response.body() != null ? response.body().string() : "";
+
+                // Handle rate limit 429
+                if (response.code() == 429) {
+                    if (backoffAttempt < MAX_BACKOFF_ATTEMPTS) {
+                        int delay = INITIAL_BACKOFF_MS * (int) Math.pow(2, backoffAttempt); // 15s, then 30s
+                        backoffAttempt++;
+                        mainHandler.post(() -> {
+                            toast("Rate limit reached. Retrying in " + (delay / 1000) + "s...");
+                            disableButton("Retrying in " + (delay / 1000) + "s...");
+                        });
+                        mainHandler.postDelayed(() -> {
+                            String topic    = etTopic.getText().toString().trim();
+                            String typeSel  = spContentType.getSelectedItem().toString();
+                            String countStr = etCount.getText().toString().trim();
+                            int count = 10;
+                            try { count = Integer.parseInt(countStr); } catch (Exception ignored) {}
+                            String promptRetry = buildPrompt(topic, typeSel, count);
+                            sendRequest(apiKey, promptRetry, typeSel);
+                        }, delay);
+                    } else {
+                        mainHandler.post(() -> {
+                            toast("Rate limit still active. Please wait a minute and try again.");
+                            startCooldown();
+                        });
+                    }
+                    return;
+                }
+
                 if (!response.isSuccessful()) {
-                    runOnUiThread(() -> {
-                        resetButton();
+                    mainHandler.post(() -> {
+                        enableButton();
                         toast("API error: " + response.code());
                     });
                     return;
                 }
+
                 try {
                     JsonObject root = JsonParser.parseString(raw).getAsJsonObject();
                     JsonArray choices = root.getAsJsonArray("choices");
-                    JsonObject msg = choices.get(0).getAsJsonObject()
-                            .getAsJsonObject("message");
+                    if (choices == null || choices.size() == 0) throw new IllegalStateException("No choices from model");
+                    JsonObject msg = choices.get(0).getAsJsonObject().getAsJsonObject("message");
                     String content = msg.get("content").getAsString();
                     String jsonOnly = extractJson(content);
-                    Log.d(TAG, "JSON only →\n" + jsonOnly);
+                    Log.d(TAG, "AI JSON:\n" + jsonOnly);
 
                     if (type.equals("Flashcards")) {
                         List<Flashcard> items = parseFlashcards(jsonOnly);
@@ -145,46 +197,58 @@ public class AIGenerateActivity extends AppCompatActivity {
                     }
                 } catch (Exception ex) {
                     Log.e(TAG, "Parse failed", ex);
-                    runOnUiThread(() -> {
-                        resetButton();
-                        toast("Parse failed. See log for details.");
+                    mainHandler.post(() -> {
+                        enableButton();
+                        toast("Parse failed. Try a simpler topic or fewer items.");
                     });
                 }
             }
         });
     }
 
-    // Reset generate button state
-    private void resetButton() {
+    private void startCooldown() {
+        btnGenerate.setEnabled(false);
+        btnGenerate.setText("Please wait...");
+        btnGenerate.postDelayed(this::enableButton, COOLDOWN_MS);
+    }
+
+    private void disableButton(String label) {
+        btnGenerate.setEnabled(false);
+        btnGenerate.setText(label);
+    }
+
+    private void enableButton() {
         btnGenerate.setEnabled(true);
         btnGenerate.setText("Generate Content");
     }
 
-    // Simple toast helper
     private void toast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
-    // Build a strict JSON-only prompt
+    // Strong prompt for better answers; forbids answer==question
     private String buildPrompt(String topic, String type, int count) {
         if ("Flashcards".equals(type)) {
             return "TASK: Create " + count + " flashcards about \"" + topic + "\".\n" +
-                    "RESPOND with ONLY valid JSON inside triple backticks.\n" +
-                    "SCHEMA:\n" +
+                    "Respond ONLY with valid JSON inside triple backticks. No extra text.\n" +
+                    "Rules:\n" +
+                    "- Each item has `question` and `answer` (answer must be the correct response).\n" +
+                    "- `answer` MUST NOT repeat `question`.\n" +
+                    "Schema:\n" +
                     "```json\n" +
                     "{ \"flashcards\": [ { \"question\": \"string\", \"answer\": \"string\" } ] }\n" +
                     "```";
         } else {
             return "TASK: Create " + count + " multiple-choice questions about \"" + topic + "\".\n" +
-                    "RESPOND with ONLY valid JSON inside triple backticks.\n" +
-                    "SCHEMA:\n" +
+                    "Respond ONLY with valid JSON inside triple backticks. No extra text.\n" +
+                    "Schema:\n" +
                     "```json\n" +
                     "{ \"questions\": [ { \"question\": \"string\", \"options\": [\"A\",\"B\",\"C\",\"D\"], \"correctIndex\": 0 } ] }\n" +
                     "```";
         }
     }
 
-    // Extract the JSON block from any extra text or fences
+    // Extract JSON from LLM output that may be fenced in triple backticks
     private String extractJson(String content) {
         int fence = content.indexOf("```");
         if (fence != -1) {
@@ -202,7 +266,7 @@ public class AIGenerateActivity extends AppCompatActivity {
         return content.trim();
     }
 
-    // Parse flashcards JSON into Room entities
+    // Parse flashcards JSON into Room entities; skip invalid Q==A
     private List<Flashcard> parseFlashcards(String json) {
         List<Flashcard> list = new ArrayList<>();
         JsonObject obj = JsonParser.parseString(json).getAsJsonObject();
@@ -210,11 +274,13 @@ public class AIGenerateActivity extends AppCompatActivity {
         if (arr == null) return list;
         for (JsonElement el : arr) {
             JsonObject f = el.getAsJsonObject();
-            String q = safeStr(f, "question");
-            String a = safeStr(f, "answer");
-            if (!q.isEmpty() && !a.isEmpty()) {
-                list.add(new Flashcard(q, a));
+            String q = safeStr(f, "question").trim();
+            String a = safeStr(f, "answer").trim();
+            if (q.isEmpty() || a.isEmpty() || q.equalsIgnoreCase(a)) {
+                Log.w(TAG, "Skipping invalid flashcard (empty or question==answer): " + q);
+                continue;
             }
+            list.add(new Flashcard(q, a));
         }
         return list;
     }
@@ -229,13 +295,16 @@ public class AIGenerateActivity extends AppCompatActivity {
             JsonObject q = el.getAsJsonObject();
             String question = safeStr(q, "question");
             JsonArray opts = q.getAsJsonArray("options");
-            int idx = q.has("correctIndex") ? q.get("correctIndex").getAsInt() : 0;
+            int idx = q.has("correctIndex") && !q.get("correctIndex").isJsonNull()
+                    ? q.get("correctIndex").getAsInt() : 0;
             if (question.isEmpty() || opts == null || opts.size() != 4) continue;
+
             String A = opts.get(0).getAsString();
             String B = opts.get(1).getAsString();
             String C = opts.get(2).getAsString();
             String D = opts.get(3).getAsString();
             if (idx < 0 || idx > 3) idx = 0;
+
             list.add(new QuizQuestion(question, A, B, C, D, idx));
         }
         return list;
@@ -250,7 +319,8 @@ public class AIGenerateActivity extends AppCompatActivity {
             for (Flashcard fc : items) {
                 db.flashcardDao().insert(fc);
             }
-            runOnUiThread(() -> {
+            mainHandler.post(() -> {
+                enableButton();
                 toast("Added " + items.size() + " flashcards");
                 finish();
             });
@@ -262,14 +332,15 @@ public class AIGenerateActivity extends AppCompatActivity {
             for (QuizQuestion q : qs) {
                 db.quizDao().insert(q);
             }
-            runOnUiThread(() -> {
+            mainHandler.post(() -> {
+                enableButton();
                 toast("Added " + qs.size() + " quiz questions");
                 finish();
             });
         }).start();
     }
 
-    // Fallback chain: BuildConfig → un-versioned resource → manifest meta-data
+    // Fallback chain: BuildConfig → resource string → manifest meta-data
     private String resolveApiKey() {
         // 1) BuildConfig
         try {
@@ -277,7 +348,7 @@ public class AIGenerateActivity extends AppCompatActivity {
             if (k != null && !k.isEmpty()) return k;
         } catch (Throwable ignored) { }
 
-        // 2) Resource (secrets.xml, Git-ignored)
+        // 2) Resource (secrets.xml)
         try {
             String r = getString(R.string.openrouter_api_key);
             if (r != null && !r.isEmpty()) return r;
@@ -287,7 +358,7 @@ public class AIGenerateActivity extends AppCompatActivity {
         try {
             ApplicationInfo ai = getPackageManager()
                     .getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
-            Bundle md = ai.metaData;
+            android.os.Bundle md = ai.metaData;
             if (md != null) {
                 String m = md.getString("OPENROUTER_API_KEY", "");
                 if (m != null && !m.isEmpty()) return m;

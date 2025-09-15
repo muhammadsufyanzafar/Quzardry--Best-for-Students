@@ -11,10 +11,10 @@ import java.util.List;
 @Dao
 public interface FlashcardDao {
     @Insert
-    void insert(Flashcard flashcard);
+    long insert(Flashcard flashcard);
 
     @Insert
-    void insertAll(List<Flashcard> flashcards);  // New method for bulk insert
+    void insertAll(List<Flashcard> flashcards);
 
     @Update
     void update(Flashcard flashcard);
@@ -27,4 +27,11 @@ public interface FlashcardDao {
 
     @Query("SELECT * FROM flashcards WHERE id = :id")
     Flashcard getFlashcardById(int id);
+
+    // Now references the column set_id
+    @Query("SELECT * FROM flashcards WHERE set_id = :folderId ORDER BY id DESC")
+    List<Flashcard> getBySet(int folderId);
+
+    @Query("SELECT COUNT(*) FROM flashcards WHERE set_id = :folderId")
+    int countBySet(int folderId);
 }

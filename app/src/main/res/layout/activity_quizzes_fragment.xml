@@ -7,42 +7,58 @@
 
     <LinearLayout
         android:id="@+id/btnCreateQuiz"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:gravity="center_vertical" android:padding="12dp"
-        android:background="@drawable/card_background" android:layout_marginBottom="12dp">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:padding="12dp"
+        android:background="@drawable/card_background"
+        android:layout_marginBottom="12dp">
         <TextView
             android:text="Create"
-            android:textStyle="bold" android:textColor="@android:color/black"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/rowAllQuizzes"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:orientation="vertical" android:padding="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp"
         android:background="@drawable/card_background">
 
         <TextView
             android:text="All quizzes"
-            android:textStyle="bold" android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
             android:textSize="16sp"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/tvQuizCount"
             android:text="No quizzes"
-            android:textColor="#666" android:layout_marginTop="4dp"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            android:textColor="#666"
+            android:layout_marginTop="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/tvBestScore"
-            android:text="Best: 0%" android:textColor="#666"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            android:text="Best: 0%"
+            android:textColor="#666"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/tvAttempts"
-            android:text="Attempts: 0" android:textColor="#666"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            android:text="Attempts: 0"
+            android:textColor="#666"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 </LinearLayout>
