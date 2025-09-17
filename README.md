@@ -1,5 +1,5 @@
 # 📚 **Quzardry - Best for Students**
-Welcome to **Quzardry**, a smart and lightweight study companion app designed for students.  
+Welcome to **Quzardry**, a smart, AI powered and lightweight study companion app designed for students.  
 It helps you **learn faster** and **retain better** with **flashcards** and **quizzes**.  
 Built with a clean UI and future-ready design, Quzardry is continuously improving to make studying more engaging and effective.  
 
@@ -11,6 +11,7 @@ Built with a clean UI and future-ready design, Quzardry is continuously improvin
 - 🎨 **Simple & clean UI** for distraction-free study  
 - 📱 **Mobile-friendly design** built in Android Studio  
 - ⚡ Lightweight, fast, and easy to use  
+- 🤖 Geminis API integrated 
 
 ---
 
@@ -26,6 +27,7 @@ Built with a clean UI and future-ready design, Quzardry is continuously improvin
 - 🔔 Study reminders & notifications  
 - 🎯 Personalized quiz modes  
 - 🎨 Improved UI/UX for a better experience  
+- Generate Flashcards and Quizzes using AI
 
 ---
 
