@@ -27,7 +27,7 @@ Built with a clean UI and future-ready design, Quzardry is continuously improvin
 - 🔔 Study reminders & notifications  
 - 🎯 Personalized quiz modes  
 - 🎨 Improved UI/UX for a better experience  
-- Generate Flashcards and Quizzes using AI
+- 📲 Generate Flashcards and Quizzes using AI
 
 ---
 
